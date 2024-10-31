@@ -391,7 +391,6 @@ impl crate::data::Gui {
                     }
                     let slider = slider
                         .step_by(1.0)
-                        .thickness(text)
                         .fixed_decimals(0)
                         .show_value(false)
                         .trailing_fill(false);
@@ -427,11 +426,7 @@ impl crate::data::Gui {
                         &mut self.settings.previous_threshold,
                         PREVIOUS_THRESHOLD_MIN..=PREVIOUS_THRESHOLD_MAX,
                     );
-                    let slider = slider
-                        .step_by(1.0)
-                        .thickness(text)
-                        .show_value(false)
-                        .trailing_fill(false);
+                    let slider = slider.step_by(1.0).show_value(false).trailing_fill(false);
                     ui.add_sized([width, text], slider);
                 });
                 if old_threshold != self.settings.previous_threshold {
@@ -462,11 +457,7 @@ impl crate::data::Gui {
                         v.active.fg_stroke = SLIDER_CIRCLE_ACTIVE;
                     }
                     let slider = Slider::new(&mut self.settings.auto_save, 0..=u8::MAX);
-                    let slider = slider
-                        .step_by(1.0)
-                        .thickness(text)
-                        .show_value(false)
-                        .trailing_fill(false);
+                    let slider = slider.step_by(1.0).show_value(false).trailing_fill(false);
                     ui.add_sized([width, text], slider);
                 });
 

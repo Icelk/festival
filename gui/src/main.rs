@@ -2,6 +2,8 @@
 // Hide console in Windows
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
+#![allow(warnings)]
+
 mod cli;
 mod constants;
 mod data;
@@ -43,7 +45,7 @@ fn main() {
                 };
 
             // Start `GUI`.
-            Box::new(crate::data::Gui::init(cc, to_kernel, from_kernel))
+            Ok(Box::new(crate::data::Gui::init(cc, to_kernel, from_kernel)))
         }),
     ) {
         panic!("eframe::run_native() failed: {e}");

@@ -833,9 +833,9 @@ macro_rules! no_rounding {
     ($ui:ident) => {{
         // Reduce rounding corners.
         let widgets = &mut $ui.visuals_mut().widgets;
-        widgets.hovered.rounding = egui::Rounding::none();
-        widgets.inactive.rounding = egui::Rounding::none();
-        widgets.active.rounding = egui::Rounding::none();
+        widgets.hovered.rounding = egui::Rounding::ZERO;
+        widgets.inactive.rounding = egui::Rounding::ZERO;
+        widgets.active.rounding = egui::Rounding::ZERO;
         // Reduced padding.
         $ui.spacing_mut().button_padding.x -= 2.0;
     }};
@@ -849,8 +849,8 @@ macro_rules! toast {
         $self
             .toasts
             .basic($str)
-            .set_closable(true)
-            .set_duration(Some(std::time::Duration::from_secs(5)));
+            .closable(true)
+            .duration(Some(std::time::Duration::from_secs(5)));
     }};
 }
 
@@ -862,8 +862,8 @@ macro_rules! toast_ok {
         $self
             .toasts
             .success($str)
-            .set_closable(true)
-            .set_duration(Some(std::time::Duration::from_secs(5)));
+            .closable(true)
+            .duration(Some(std::time::Duration::from_secs(5)));
     }};
 }
 
@@ -875,8 +875,8 @@ macro_rules! toast_err {
         $self
             .toasts
             .error($str)
-            .set_closable(true)
-            .set_duration(Some(std::time::Duration::from_secs(10)));
+            .closable(true)
+            .duration(Some(std::time::Duration::from_secs(10)));
     }};
 }
 

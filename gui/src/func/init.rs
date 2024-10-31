@@ -7,7 +7,7 @@ use crate::data::{DebugInfo, Settings, Settings0, Settings1, Settings2, State, S
 use benri::{atomic_store, now, send};
 use crossbeam::channel::{Receiver, Sender};
 use disk::{Bincode2, Json};
-use egui::{FontData, FontDefinitions, FontFamily, FontId, Style, TextStyle};
+use egui::{FontData, FontDefinitions, FontFamily, FontId, Style, TextStyle, ThemePreference};
 use log::{debug, info, warn};
 use shukusai::{
     collection::Collection,
@@ -112,19 +112,23 @@ impl crate::data::Gui {
         // SAFETY: This image is known at compile-time. It should never fail.
         let icon = image::load_from_memory(FESTIVAL_ICON).unwrap().to_rgba8();
         let (width, height) = icon.dimensions();
-        let icon_data = Some(eframe::IconData {
+        let icon_data = Some(Arc::new(egui::IconData {
             rgba: icon.into_raw(),
             width,
             height,
-        });
+        }));
 
         // The rest
         eframe::NativeOptions {
-            min_window_size: Some(egui::vec2(APP_WIDTH_MIN, APP_HEIGHT_MIN)),
-            initial_window_size: Some(egui::vec2(APP_WIDTH_DEFAULT, APP_HEIGHT_DEFAULT)),
-            follow_system_theme: false,
-            default_theme: eframe::Theme::Dark,
-            drag_and_drop_support: true,
+            viewport: egui::ViewportBuilder {
+                min_inner_size: Some(egui::vec2(APP_WIDTH_MIN, APP_HEIGHT_MIN)),
+                inner_size: Some(egui::vec2(APP_WIDTH_DEFAULT, APP_HEIGHT_DEFAULT)),
+                drag_and_drop: Some(true),
+                app_id: Some(FESTIVAL_DBUS.to_string()),
+                icon: icon_data,
+
+                ..Default::default()
+            },
             // FIXME:
             // `eframe::Renderer::Wgpu` causes colors to
             // be over-saturated on `KDE`. For now, use
@@ -140,8 +144,6 @@ impl crate::data::Gui {
             renderer: eframe::Renderer::Glow,
             #[cfg(not(target_os = "linux"))]
             renderer: eframe::Renderer::Wgpu,
-            app_id: Some(FESTIVAL_DBUS.to_string()),
-            icon_data,
             ..Default::default()
         }
     }
@@ -175,6 +177,8 @@ impl crate::data::Gui {
             }
         };
         debug!("Settings{SETTINGS_VERSION}: {settings:#?}");
+
+        cc.egui_ctx.set_theme(ThemePreference::Dark);
 
         cc.egui_ctx
             .set_pixels_per_point(settings.pixels_per_point as f32);

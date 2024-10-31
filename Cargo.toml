@@ -61,5 +61,5 @@ zip          = { version = "0.6.6" }
 
 ### HACK:
 ### `egui`'s workspace needs this.
-thiserror = "1.0.37"
-wgpu = "0.18.0"
+# thiserror = "1.0.37"
+# wgpu = "0.18.0"

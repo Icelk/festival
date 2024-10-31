@@ -72,7 +72,7 @@ pub const PREVIOUS_THRESHOLD_DEFAULT: u32 = 3;
 //---------------------------------------------------------------------------------------------------- Audio Init
 pub(crate) struct Audio {
     // A handle to the audio output device.
-    output: AudioOutput,
+    output: Option<AudioOutput>,
 
     // SOMEDAY:
     // We should probably have a `next` AudioReader lined up and ready to go.
@@ -276,7 +276,9 @@ impl Audio {
                 // when users switch songs (the leftover samples
                 // get played then and sound terrible).
                 trace!("Audio - Pause [1/3]: flush()'ing leftover samples");
-                self.output.flush();
+                if let Some(output) = self.output.take() {
+                    output.flush();
+                }
 
                 trace!("Audio - Pause [2/3]: waiting on message...");
                 match select.ready() {
@@ -295,7 +297,7 @@ impl Audio {
             }
 
             //------ Audio decoding & demuxing.
-            if let Some(audio_reader) = &mut self.current {
+            if let (Some(audio_reader), Some(output)) = (&mut self.current, &mut self.output) {
                 let AudioReader {
                     reader,
                     decoder,
@@ -359,13 +361,14 @@ impl Audio {
                         // decoder, but the length is not.
                         let duration = decoded.capacity() as u64;
 
-                        if spec != self.output.spec || duration != self.output.duration {
+                        if spec != output.spec || duration != output.duration {
                             // If the spec/duration is different, we must re-open a
                             // matching audio output device or audio will get weird.
                             match AudioOutput::try_open(spec, duration) {
                                 Ok(o) => {
-                                    self.output.flush();
-                                    self.output = o;
+                                    output.flush();
+
+                                    output = o;
                                 }
 
                                 // And if we couldn't, pause playback.

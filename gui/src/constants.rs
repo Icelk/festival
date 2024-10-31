@@ -5,7 +5,7 @@ use egui::{style::Spacing, Color32, Visuals};
 
 pub use const_format::assertcp as const_assert;
 pub use const_format::formatcp as const_format;
-use egui::style::{ScrollStyle, Selection, WidgetVisuals, Widgets};
+use egui::style::{HandleShape, ScrollStyle, Selection, TextCursorStyle, WidgetVisuals, Widgets};
 use once_cell::sync::Lazy;
 
 //---------------------------------------------------------------------------------------------------- Version.
@@ -96,15 +96,18 @@ pub static VISUALS: Lazy<Visuals> = Lazy::new(|| {
         warn_fg_color: Color32::from_rgb(255, 143, 0), // orange
         error_fg_color: Color32::from_rgb(255, 0, 0), // red
         window_rounding: Rounding::same(6.0),
-        window_shadow: Shadow::big_dark(),
+        window_shadow: Shadow::NONE,
         window_fill: BG,
         window_stroke: Stroke::new(1.0, Color32::from_gray(60)),
         menu_rounding: Rounding::same(6.0),
         panel_fill: BG,
-        popup_shadow: Shadow::small_dark(),
+        popup_shadow: Shadow::NONE,
         resize_corner_size: 12.0,
-        text_cursor: Stroke::new(2.0, Color32::from_rgb(192, 222, 255)),
-        text_cursor_preview: false,
+        text_cursor: TextCursorStyle {
+            stroke: Stroke::new(2.0, Color32::from_rgb(192, 222, 255)),
+            preview: false,
+            ..Default::default()
+        },
         clip_rect_margin: 3.0, // should be at least half the size of the widest frame stroke + max WidgetVisuals::expansion
         button_frame: true,
         collapsing_header_frame: false,
@@ -113,6 +116,7 @@ pub static VISUALS: Lazy<Visuals> = Lazy::new(|| {
         slider_trailing_fill: true,
         interact_cursor: None,
         image_loading_spinners: true,
+        ..Default::default()
     }
 });
 

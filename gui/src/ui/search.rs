@@ -51,7 +51,7 @@ impl crate::data::Gui {
                     // This forces the text cursor to move forward 1 character.
                     if let Some(mut state) = egui::widgets::text_edit::TextEditState::load(ctx, id)
                     {
-                        let cursor = egui::widgets::text_edit::CCursorRange {
+                        let cursor = egui::text_selection::CCursorRange {
                             primary: epaint::text::cursor::CCursor {
                                 index: 1,
                                 ..Default::default()
@@ -59,7 +59,7 @@ impl crate::data::Gui {
                             ..Default::default()
                         };
 
-                        state.set_ccursor_range(Some(cursor));
+                        state.cursor.set_char_range(Some(cursor));
                     }
 
                     ctx.memory_mut(|m| m.request_focus(id));

@@ -11,6 +11,7 @@ use crate::text::{
 };
 use benri::{debug_panic, flip, log::*, sync::*, time::*};
 use disk::Plain;
+use eframe::glow::Context;
 use egui::widgets::{Button, Label, SelectableLabel, Slider, Spinner, TextEdit};
 use egui::{
     CentralPanel, Frame, ProgressBar, RichText, ScrollArea, Sense, SidePanel, TextStyle,
@@ -32,13 +33,13 @@ use strum::*;
 //---------------------------------------------------------------------------------------------------- `GUI`'s eframe impl.
 impl eframe::App for Gui {
     //-------------------------------------------------------------------------------- On exit.
-    fn on_close_event(&mut self) -> bool {
+    fn on_exit(&mut self, _: Option<&Context>) {
         // If already in the process of exiting, return,
         // else turn on `GUI`'s signal for exiting.
         match self.exiting {
             true => {
                 warn!("GUI - Already in process of exiting, ignoring exit signal");
-                return false;
+                return;
             }
             false => {
                 info!("GUI - Exiting...");
@@ -57,9 +58,6 @@ impl eframe::App for Gui {
 
         // Set the exit `Instant`.
         self.exit_instant = Instant::now();
-
-        // Don't exit here.
-        false
     }
 
     //-------------------------------------------------------------------------------- Main event loop.
@@ -73,12 +71,14 @@ impl eframe::App for Gui {
 
         // If `souvlaki` sent an exit signal.
         if shukusai::state::media_controls_should_exit() {
-            self.on_close_event();
+            ctx.send_viewport_cmd(egui::ViewportCommand::Close);
         }
 
         // If `souvlaki` sent a `Raise` signal.
         if shukusai::state::media_controls_raise() {
-            frame.request_user_attention(egui::output::UserAttentionType::Informational);
+            ctx.send_viewport_cmd(egui::ViewportCommand::RequestUserAttention(
+                egui::output::UserAttentionType::Informational,
+            ))
         }
 
         // Acquire a local copy of the `AUDIO_STATE`.
@@ -252,16 +252,18 @@ impl Gui {
             // Set window title.
             if let (Some(key), Some(index)) = (self.audio_state.song, self.audio_state.queue_idx) {
                 let (artist, album, song) = self.collection.walk(key);
-                frame.set_window_title(&self.settings.window_title.format(
-                    index + 1,
-                    self.audio_state.queue.len(),
-                    &song.runtime,
-                    &artist.name,
-                    &album.title,
-                    &song.title,
+                ctx.send_viewport_cmd(egui::ViewportCommand::Title(
+                    self.settings.window_title.format(
+                        index + 1,
+                        self.audio_state.queue.len(),
+                        &song.runtime,
+                        &artist.name,
+                        &album.title,
+                        &song.title,
+                    ),
                 ));
             } else {
-                frame.set_window_title(FESTIVAL);
+                ctx.send_viewport_cmd(egui::ViewportCommand::Title(FESTIVAL.to_owned()));
             }
 
             // Set bottom UI runtime text width.
@@ -341,7 +343,9 @@ impl Gui {
                     }
                 // Check for `F11` (Fullscreen)
                 } else if input.consume_key(Modifiers::NONE, Key::F11) {
-                    frame.set_fullscreen(!frame.info().window_info.fullscreen);
+                    ctx.send_viewport_cmd(egui::ViewportCommand::Fullscreen(
+                        !ctx.input(|i| i.viewport().fullscreen.unwrap_or(false)),
+                    ));
                 // Check for `Ctrl+C` (Reset Collection)
                 } else if input.consume_key(Modifiers::COMMAND, Key::C) {
                     self.reset_collection();
@@ -707,8 +711,6 @@ impl Gui {
                         )
                         .smallest_positive(1.0)
                         .show_value(false)
-                        .thickness(h * 2.0)
-                        .circle_size(h),
                     );
 
                     // Only send signal if the slider was dragged + released.
@@ -797,8 +799,6 @@ impl Gui {
                             .smallest_positive(1.0)
                             .show_value(false)
                             .vertical()
-                            .thickness(unit * 2.0)
-                            .circle_size(unit),
                     );
 
                     // Send signal if the slider was/is being dragged.
@@ -820,7 +820,7 @@ impl Gui {
                     } else if resp.hovered() {
                         ctx.input_mut(|input| {
                             for event in input.events.iter() {
-                                if let egui::Event::Scroll(vec2) = event {
+                                if let egui::Event::MouseWheel { delta: vec2, .. } = event {
                                     if vec2.y.is_sign_positive() {
                                         self.add_volume(1);
                                     } else if vec2.y.is_sign_negative() {

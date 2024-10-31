@@ -29,7 +29,7 @@ use std::sync::Arc;
 //#[cfg(target_os = "macos")]
 impl Drop for Gui {
     fn drop(&mut self) {
-        eframe::App::on_close_event(self);
+        // eframe::App::on_close_event(self);
     }
 }
 
