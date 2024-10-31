@@ -68,6 +68,7 @@ impl crate::data::Gui {
             // (It wants to wait until the pointer is still).
             interaction: egui::style::Interaction {
                 show_tooltips_only_when_still: false,
+                selectable_labels: false,
                 ..Default::default()
             },
 
