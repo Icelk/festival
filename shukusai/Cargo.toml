@@ -74,7 +74,7 @@ notify            = "6.0.0"
 mime_guess        = "2.0.4"
 rayon             = "1.7.0"
 souvlaki          = "0.6.1"
-symphonia         = { version = "0.5.2", path = "../external/Symphonia/symphonia", features = ["all"] }
+symphonia         = { version = "0.5.2", features = ["all"] }
 strsim            = "0.10.0"
 zune-core         = "0.2.14"
 zune-jpeg         = "0.3.17"

@@ -540,15 +540,15 @@ impl crate::ccd::Ccd {
     // Gets the metadata tags and the visuals.
     fn metadata(mut p: ProbeResult) -> Result<MetadataRevision, anyhow::Error> {
         // This is more likely to contain metadata.
-        if let Some(md) = p.format.metadata().into_current() {
-            return Ok(md);
+        if let Some(md) = p.format.metadata().current() {
+            return Ok(md.clone());
         }
 
         // But, sometimes it is found here.
-        if let Some(ml) = p.metadata.into_inner() {
-            let mut md = ml.into_inner();
-            if let Some(md) = md.pop_front() {
-                return Ok(md);
+        if let Some(mut ml) = p.metadata.get() {
+            let md = ml.skip_to_latest();
+            if let Some(md) = md {
+                return Ok(md.clone());
             }
         }
 
@@ -890,7 +890,8 @@ impl crate::ccd::Ccd {
             Err(e) => bail!(e),
         };
 
-        let (mut tags, visuals, _) = metadata.into_inner();
+        let mut tags = metadata.tags().to_vec();
+        let visuals = metadata.visuals().to_vec();
 
         // SOMEDAY:
         // We should handle compilations correctly.
