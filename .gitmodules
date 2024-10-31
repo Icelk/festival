@@ -1,9 +1,9 @@
 [submodule "external/egui"]
 	path = external/egui
-	url = https://github.com/hinto-janai/egui.git
+	url = https://github.com/emilk/egui.git
 [submodule "external/egui-notify"]
 	path = external/egui-notify
-	url = https://github.com/hinto-janai/egui-notify
+	url = https://github.com/emilk/egui-notify
 [submodule "external/Symphonia"]
 	path = external/Symphonia
 	url = https://github.com/hinto-janai/Symphonia
