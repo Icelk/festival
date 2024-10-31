@@ -85,7 +85,7 @@ impl crate::data::Gui {
     fn init_fonts() -> egui::FontDefinitions {
         let mut fonts = FontDefinitions::default();
 
-        for (i, (font, bytes)) in FONT_ARRAY.iter().enumerate() {
+        for (font, bytes) in FONT_ARRAY.iter().rev() {
             fonts
                 .font_data
                 .insert(font.to_string(), FontData::from_static(bytes));
@@ -94,12 +94,13 @@ impl crate::data::Gui {
                 .families
                 .get_mut(&FontFamily::Monospace)
                 .expect("Failed to get: egui::FontFamily::Monospace")
-                .insert(i, font.to_string());
+                .insert(0, font.to_string());
+            // ↑: last font in iter (which has index 0 because reverse), gets inserted first.
             fonts
                 .families
                 .get_mut(&FontFamily::Proportional)
                 .expect("Failed to get: egui::FontFamily::Proportional")
-                .push(i.to_string());
+                .push(font.to_string());
         }
 
         fonts
