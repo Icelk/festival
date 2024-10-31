@@ -72,7 +72,7 @@ pub const PREVIOUS_THRESHOLD_DEFAULT: u32 = 3;
 //---------------------------------------------------------------------------------------------------- Audio Init
 pub(crate) struct Audio {
     // A handle to the audio output device.
-    output: Option<AudioOutput>,
+    output: AudioOutput,
 
     // SOMEDAY:
     // We should probably have a `next` AudioReader lined up and ready to go.
@@ -276,9 +276,7 @@ impl Audio {
                 // when users switch songs (the leftover samples
                 // get played then and sound terrible).
                 trace!("Audio - Pause [1/3]: flush()'ing leftover samples");
-                if let Some(output) = self.output.take() {
-                    output.flush();
-                }
+                self.output.flush();
 
                 trace!("Audio - Pause [2/3]: waiting on message...");
                 match select.ready() {
@@ -297,7 +295,7 @@ impl Audio {
             }
 
             //------ Audio decoding & demuxing.
-            if let (Some(audio_reader), Some(output)) = (&mut self.current, &mut self.output) {
+            if let Some(audio_reader) = &mut self.current {
                 let AudioReader {
                     reader,
                     decoder,
@@ -361,14 +359,22 @@ impl Audio {
                         // decoder, but the length is not.
                         let duration = decoded.capacity() as u64;
 
-                        if spec != output.spec || duration != output.duration {
+                        if spec != self.output.spec || duration != self.output.duration {
                             // If the spec/duration is different, we must re-open a
                             // matching audio output device or audio will get weird.
                             match AudioOutput::try_open(spec, duration) {
                                 Ok(o) => {
-                                    output.flush();
+                                    drop(o);
+                                    self.output.flush();
+                                    let nulled =
+                                        unsafe { std::mem::MaybeUninit::uninit().assume_init() };
+                                    let old = std::mem::replace(&mut self.output, nulled);
+                                    drop(old);
 
-                                    output = o;
+                                    let o = AudioOutput::try_open(spec, duration)
+                                        .expect("we could open audio just a moment ago");
+                                    let tmp = std::mem::replace(&mut self.output, o);
+                                    let no_drop_nulled = std::mem::ManuallyDrop::new(tmp);
                                 }
 
                                 // And if we couldn't, pause playback.

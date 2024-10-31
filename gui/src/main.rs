@@ -2,8 +2,6 @@
 // Hide console in Windows
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
-#![allow(warnings)]
-
 mod cli;
 mod constants;
 mod data;
