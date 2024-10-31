@@ -8,7 +8,7 @@
 //use std::{};
 use crate::constants::{SETTINGS_VERSION, STATE_VERSION};
 use crate::data::Gui;
-use crate::data::{Settings, State, EXIT_COUNTDOWN, SHOULD_EXIT};
+use crate::data::{Settings, State, EXIT_COUNTDOWN};
 use benri::{log::*, sync::*, thread::*};
 use crossbeam::channel::{Receiver, Sender};
 use disk::{Bincode2, Json};

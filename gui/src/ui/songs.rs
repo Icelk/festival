@@ -1,7 +1,5 @@
 //---------------------------------------------------------------------------------------------------- Use
 use crate::constants::WHITE;
-use crate::data::Tab;
-use crate::text::OPEN_PARENT_FOLDER;
 use egui::{ComboBox, Label, RichText, ScrollArea, Sense};
 use egui_extras::{Column, TableBuilder};
 use log::warn;

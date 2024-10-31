@@ -4,7 +4,7 @@ use disk::Empty;
 use once_cell::sync::OnceCell;
 use serde::{Deserialize, Serialize};
 use shukusai::constants::{FESTIVAL, FRONTEND_SUB_DIR};
-use std::path::{Path, PathBuf};
+use std::path::PathBuf;
 
 //---------------------------------------------------------------------------------------------------- Docs
 disk::empty!(

@@ -3,9 +3,9 @@
 //use log::{info,error,warn,trace,debug};
 use crate::constants::{
     ACCENT_COLOR, ALBUMS_PER_ROW_DEFAULT, ALBUM_ART_SIZE_DEFAULT, AUTO_SAVE_INTERVAL_SECONDS, GUI,
-    PIXELS_PER_POINT_DEFAULT, SETTINGS_VERSION,
+    PIXELS_PER_POINT_DEFAULT,
 };
-use crate::data::{AlbumSizing, ArtistSubTab, SearchSort, Settings, WindowTitle};
+use crate::data::{AlbumSizing, SearchSort, Settings, WindowTitle};
 use bincode::{Decode, Encode};
 use const_format::formatcp;
 use disk::Bincode2;
@@ -16,7 +16,6 @@ use shukusai::{
     search::SearchKind,
     sort::{AlbumSort, ArtistSort, SongSort},
 };
-use std::marker::PhantomData;
 use std::path::PathBuf;
 
 //---------------------------------------------------------------------------------------------------- Settings
@@ -109,8 +108,8 @@ impl Settings2 {
     }
 }
 
-impl Into<Settings> for Settings2 {
-    fn into(self) -> Settings {
+impl From<Settings2> for Settings {
+    fn from(val: Settings2) -> Self {
         let Settings2 {
             artist_sort,
             album_sort,
@@ -128,7 +127,7 @@ impl Into<Settings> for Settings2 {
             collection_paths,
             pixels_per_point,
             ..
-        } = self;
+        } = val;
 
         Settings {
             artist_sort,
@@ -189,8 +188,8 @@ mod test {
         assert_eq!(S2.album_pixel_size, 227.0);
         assert_eq!(S2.albums_per_row, 10);
         assert_eq!(S2.previous_threshold, 10);
-        assert_eq!(S2.restore_state, false);
-        assert_eq!(S2.empty_autoplay, false);
+        assert!(!S2.restore_state);
+        assert!(!S2.empty_autoplay);
         assert_eq!(S2.accent_color, egui::Color32::from_rgb(97, 101, 119));
         assert_eq!(S2.collection_paths, [PathBuf::from("/home/main/Music")]);
         assert_eq!(S2.pixels_per_point.round(), 2.0);

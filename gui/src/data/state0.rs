@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------------------------------- Use
 //use anyhow::{bail,ensure,Error};
 //use log::{info,error,warn,trace,debug};
-use crate::constants::{GUI, STATE_VERSION};
+use crate::constants::GUI;
 use crate::data::{State, Tab};
 use bincode::{Decode, Encode};
 use const_format::formatcp;
@@ -80,8 +80,8 @@ impl State0 {
     }
 }
 
-impl Into<State> for State0 {
-    fn into(self) -> State {
+impl From<State0> for State {
+    fn from(val: State0) -> Self {
         let State0 {
             volume,
             tab,
@@ -91,7 +91,7 @@ impl Into<State> for State0 {
             repeat,
             album,
             artist,
-        } = self;
+        } = val;
 
         State {
             volume,
@@ -120,7 +120,7 @@ mod test {
     use super::*;
     use disk::Bincode2;
     use once_cell::sync::Lazy;
-    use std::path::PathBuf;
+    
 
     // Empty.
     const S1: Lazy<State0> =

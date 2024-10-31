@@ -14,7 +14,6 @@ use crate::constants::FESTIVAL;
 use crate::state::VOLUME;
 use anyhow::anyhow;
 use benri::atomic_load;
-use benri::log::*;
 use symphonia::core::audio::*;
 use symphonia::core::units::Duration;
 

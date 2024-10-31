@@ -23,5 +23,3 @@ pub(crate) use img::*;
 
 #[cfg(feature = "gui")]
 mod convert;
-#[cfg(feature = "gui")]
-pub(super) use convert::*;

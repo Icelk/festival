@@ -2,7 +2,6 @@
 use crate::collection::{AlbumKey, Art, ArtistKey, SongKey};
 use bincode::{Decode, Encode};
 use readable::{Date, Runtime, Unsigned};
-use std::marker::PhantomData;
 use std::path::PathBuf;
 
 //---------------------------------------------------------------------------------------------------- Album

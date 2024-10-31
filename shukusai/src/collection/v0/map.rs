@@ -1,5 +1,4 @@
 //---------------------------------------------------------------------------------------------------- Use
-use crate::collection::v0::{Album, Artist, Song};
 use crate::collection::{AlbumKey, ArtistKey, SongKey};
 use bincode::{Decode, Encode};
 use serde::{Deserialize, Serialize};

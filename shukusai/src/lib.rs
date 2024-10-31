@@ -71,7 +71,6 @@ mod ccd;
 mod macros;
 mod serde;
 mod watch;
-pub(crate) use macros::*;
 
 //---------------------------------------------------------------------------------------------------- Hidden Re-exports.
 #[doc(hidden)]

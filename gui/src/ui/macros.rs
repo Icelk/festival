@@ -454,7 +454,7 @@ macro_rules! song_button {
             if $self.modifiers.command {
                 $self.playlist_add_screen = Some(shukusai::collection::KeyEnum::Song($key));
             } else if let Some(queue_index) = $queue_index {
-                crate::play_queue_index!($self, queue_index);
+                $crate::play_queue_index!($self, queue_index);
             } else if let Some(artist_key) = $artist {
                 $crate::play_artist_offset!($self, artist_key, $offset);
             } else {
@@ -487,7 +487,7 @@ macro_rules! song_button {
         // Queue tab has wider song buttons, so
         // we must vary the width for that.
         let ascii = $song.title.is_ascii();
-        let head_len = match $self.state.tab == crate::data::Tab::Queue {
+        let head_len = match $self.state.tab == $crate::data::Tab::Queue {
             true => {
                 if ascii {
                     17.0

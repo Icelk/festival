@@ -7,15 +7,10 @@ use crate::collection::v0::{
     Map,
 };
 use crate::collection::{AlbumKey, ArtistKey, Key, SongKey};
-use crate::constants::{COLLECTION_VERSION, FESTIVAL, FRONTEND_SUB_DIR, HEADER, STATE_SUB_DIR};
-use crate::sort::{AlbumSort, ArtistSort, SongSort};
-use benri::lock;
+use crate::constants::{FESTIVAL, FRONTEND_SUB_DIR, HEADER, STATE_SUB_DIR};
 use bincode::{Decode, Encode};
 use const_format::formatcp;
-use once_cell::sync::Lazy;
-use rand::{prelude::SliceRandom, Rng, SeedableRng};
 use readable::Unsigned;
-use std::sync::{Arc, Mutex};
 
 //---------------------------------------------------------------------------------------------------- Collection
 disk::bincode2!(

@@ -2,7 +2,7 @@
 use crate::data::{DebugInfo, Settings, State, StateRestore};
 use crossbeam::channel::{Receiver, Sender};
 use shukusai::{
-    collection::{AlbumKey, ArtistKey, Collection, KeyEnum, SongKey},
+    collection::{Collection, KeyEnum, SongKey},
     kernel::{FrontendToKernel, KernelToFrontend},
     state::{AudioState, ResetState},
 };

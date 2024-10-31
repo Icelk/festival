@@ -4,8 +4,7 @@ use egui::epaint::{Rounding, Shadow, Stroke};
 use egui::{style::Spacing, Color32, Visuals};
 
 pub use const_format::assertcp as const_assert;
-pub use const_format::formatcp as const_format;
-use egui::style::{HandleShape, ScrollStyle, Selection, TextCursorStyle, WidgetVisuals, Widgets};
+use egui::style::{ScrollStyle, Selection, TextCursorStyle, WidgetVisuals, Widgets};
 use once_cell::sync::Lazy;
 
 //---------------------------------------------------------------------------------------------------- Version.

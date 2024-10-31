@@ -3,7 +3,6 @@ use crate::collection::art::Art;
 use crate::collection::key::{AlbumKey, ArtistKey, SongKey};
 use bincode::{Decode, Encode};
 use readable::{Date, Runtime, Unsigned};
-use std::marker::PhantomData;
 use std::path::PathBuf;
 use std::sync::Arc;
 

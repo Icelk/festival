@@ -5,7 +5,6 @@ use crate::{
     text::{ARTIST_TOTAL_ALBUM, ARTIST_TOTAL_RUNTIME, ARTIST_TOTAL_SONG, SELECT_ARTIST},
 };
 use egui::{Label, RichText, ScrollArea, SelectableLabel, Sense, TextStyle};
-use log::warn;
 use readable::HeadTail;
 use readable::Unsigned;
 

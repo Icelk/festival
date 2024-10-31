@@ -166,7 +166,7 @@ impl crate::data::Gui {
                 // Reset collection.
                 ui.scope(|ui| {
                     // Make button color red.
-                    let mut visuals = ui.visuals_mut();
+                    let visuals = ui.visuals_mut();
                     visuals.widgets.inactive.weak_bg_fill = egui::Color32::from_rgb(120, 40, 40);
                     visuals.widgets.hovered.weak_bg_fill = egui::Color32::from_rgb(180, 40, 40);
                     visuals.widgets.active.weak_bg_fill = egui::Color32::from_rgb(140, 40, 40);

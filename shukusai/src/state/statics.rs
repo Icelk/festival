@@ -1,6 +1,5 @@
 //---------------------------------------------------------------------------------------------------- Use
 use crate::audio::Volume;
-use crate::collection::AtomicSongKey;
 use benri::atomic_load;
 use std::sync::atomic::{AtomicBool, AtomicU8};
 

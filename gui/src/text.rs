@@ -7,12 +7,12 @@
 //---------------------------------------------------------------------------------------------------- Use
 use crate::constants::{
     ACCENT_COLOR_RGB, ALBUMS_PER_ROW_MAX, ALBUMS_PER_ROW_MIN, ALBUM_ART_SIZE_MAX,
-    ALBUM_ART_SIZE_MIN, FESTIVAL_NAME_VER, PIXELS_PER_POINT_MAX_STR, PIXELS_PER_POINT_MIN_STR,
+    ALBUM_ART_SIZE_MIN, PIXELS_PER_POINT_MAX_STR, PIXELS_PER_POINT_MIN_STR,
     PIXELS_PER_POINT_UNIT_STR, SEARCH_MAX_LEN, SETTINGS_VERSION, STATE_VERSION,
 };
 use const_format::formatcp;
 use shukusai::constants::{
-    AUDIO_VERSION, COLLECTION_VERSION, COMMIT, OS_ARCH, PLAYLIST_VERSION, SHUKUSAI_NAME_VER,
+    AUDIO_VERSION, COLLECTION_VERSION, OS_ARCH, PLAYLIST_VERSION,
 };
 
 //---------------------------------------------------------------------------------------------------- Platform

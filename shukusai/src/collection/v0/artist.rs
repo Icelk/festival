@@ -2,7 +2,6 @@
 use crate::collection::{AlbumKey, ArtistKey, SongKey};
 use bincode::{Decode, Encode};
 use readable::Runtime;
-use std::marker::PhantomData;
 
 //----------------------------------------------------------------------------------------------------
 #[derive(Clone, Debug, Default, Hash, PartialEq, Eq, PartialOrd, Ord, Encode, Decode)]

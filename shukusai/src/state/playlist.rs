@@ -7,8 +7,6 @@ use crate::{
 use benri::{lockr, lockw};
 use bincode::{Decode, Encode};
 use const_format::formatcp;
-use disk::Bincode2;
-use log::{debug, error, info, trace, warn};
 use rayon::prelude::*;
 use serde::{Deserialize, Serialize};
 use std::borrow::Cow;

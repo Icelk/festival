@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------------------------------- Use
 //use anyhow::{bail,ensure,Error};
 //use log::{info,error,warn,trace,debug};
-use super::{album, Tab};
+use super::Tab;
 use crate::constants::{GUI, STATE_VERSION};
 use crate::data::{ArtistSubTab, PlaylistSubTab};
 use bincode::{Decode, Encode};
@@ -122,6 +122,7 @@ impl Default for State {
 /// search `Keychain`'s are cleared, only important things
 /// like `album: Option<AlbumKey>` are carried over.
 #[derive(Debug, Clone)]
+#[derive(Default)]
 pub struct StateRestore {
     //               artist    album
     //                 v         v
@@ -129,14 +130,6 @@ pub struct StateRestore {
     pub artist: Option<Arc<str>>,
 }
 
-impl Default for StateRestore {
-    fn default() -> Self {
-        Self {
-            album: None,
-            artist: None,
-        }
-    }
-}
 
 impl StateRestore {
     // Convert Key's into Arc<str>.
@@ -158,13 +151,11 @@ impl StateRestore {
         state.album = self
             .album
             .take()
-            .map(|(artist, album)| collection.album(artist, album).map(|(_, key)| key))
-            .flatten();
+            .and_then(|(artist, album)| collection.album(artist, album).map(|(_, key)| key));
         state.artist = self
             .artist
             .take()
-            .map(|artist| collection.artist(artist).map(|(_, key)| key))
-            .flatten();
+            .and_then(|artist| collection.artist(artist).map(|(_, key)| key));
 
         // Erase some misc state.
         state.search_string.clear();
@@ -178,7 +169,7 @@ mod test {
     use super::*;
     use disk::Bincode2;
     use once_cell::sync::Lazy;
-    use std::path::PathBuf;
+    
 
     // Empty.
     const S1: Lazy<State> =

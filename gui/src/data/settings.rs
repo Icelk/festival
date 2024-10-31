@@ -16,7 +16,6 @@ use shukusai::{
     search::SearchKind,
     sort::{AlbumSort, ArtistSort, SongSort},
 };
-use std::marker::PhantomData;
 use std::path::PathBuf;
 
 //---------------------------------------------------------------------------------------------------- Settings
@@ -149,8 +148,8 @@ mod test {
         assert_eq!(S2.albums_per_row, 10);
         assert_eq!(S2.previous_threshold, 10);
         assert_eq!(S2.auto_save, 30);
-        assert_eq!(S2.restore_state, false);
-        assert_eq!(S2.empty_autoplay, false);
+        assert!(!S2.restore_state);
+        assert!(!S2.empty_autoplay);
         assert_eq!(S2.accent_color, egui::Color32::from_rgb(97, 101, 119));
         assert_eq!(S2.collection_paths, [PathBuf::from("/home/main/Music")]);
         assert_eq!(S2.pixels_per_point.round(), 2.0);

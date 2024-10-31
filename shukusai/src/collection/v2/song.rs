@@ -3,7 +3,6 @@ use crate::collection::{AlbumKey, SongKey};
 use bincode::{Decode, Encode};
 use readable::Runtime;
 use serde::Serialize;
-use std::marker::PhantomData;
 use std::path::PathBuf;
 use std::sync::Arc;
 

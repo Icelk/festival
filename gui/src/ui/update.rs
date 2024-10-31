@@ -1,12 +1,12 @@
 //---------------------------------------------------------------------------------------------------- Use
 use crate::constants::{
-    BLACK, BONE, GREEN, MEDIUM_GRAY, RUNTIME_WIDTH, SLIDER_CIRCLE_ACTIVE, SLIDER_CIRCLE_HOVERED,
-    SLIDER_CIRCLE_INACTIVE, UI_CONTROL_WIDTH, YELLOW,
+    BLACK, BONE, RUNTIME_WIDTH, SLIDER_CIRCLE_ACTIVE, SLIDER_CIRCLE_HOVERED,
+    SLIDER_CIRCLE_INACTIVE, UI_CONTROL_WIDTH,
 };
 use crate::data::Gui;
 use crate::data::{KeyPress, Tab, ALPHANUMERIC_KEY, EXIT_COUNTDOWN, SHOULD_EXIT};
 use crate::text::{
-    COLLECTION_LOADING, COLLECTION_RESETTING, DRAG_AND_DROP, EMPTY_COLLECTION, HELP, MOD,
+    COLLECTION_LOADING, COLLECTION_RESETTING, DRAG_AND_DROP, EMPTY_COLLECTION, MOD,
     UI_FORWARDS, UI_PAUSE, UI_PLAY, UI_PREVIOUS,
 };
 use benri::{debug_panic, flip, log::*, sync::*, time::*};
@@ -19,7 +19,6 @@ use egui::{
 };
 use log::{debug, error, info, warn};
 use readable::HeadTail;
-use readable::{Runtime, Unsigned};
 use shukusai::{
     collection::KeyEnum,
     constants::FESTIVAL,
@@ -268,7 +267,7 @@ impl Gui {
 
             // Set bottom UI runtime text width.
             self.runtime_width = match self.audio_state.runtime.as_str().len() {
-                4 | 5 | 3 | 2 | 1 | 0 => RUNTIME_WIDTH,
+                0..=5 => RUNTIME_WIDTH,
                 7 | 6 => RUNTIME_WIDTH + 65.0,
                 _ => RUNTIME_WIDTH + 85.0,
             };
@@ -680,10 +679,8 @@ impl Gui {
                                 {
                                     crate::artist!(self, album.artist);
                                 }
-                            } else {
-                                if ui.add(artist_name.sense(Sense::click())).clicked() {
-                                    crate::artist!(self, album.artist);
-                                }
+                            } else if ui.add(artist_name.sense(Sense::click())).clicked() {
+                                crate::artist!(self, album.artist);
                             }
                         });
                     });

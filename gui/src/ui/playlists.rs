@@ -1,6 +1,6 @@
 //---------------------------------------------------------------------------------------------------- Use
 use crate::{
-    constants::{BONE, GRAY, GREEN, MEDIUM_GRAY, PLAYLIST_NAME_MAX_LEN, RED, YELLOW},
+    constants::{BONE, GRAY, MEDIUM_GRAY, PLAYLIST_NAME_MAX_LEN, YELLOW},
     data::PlaylistSubTab,
     text::{
         PLAYLIST_COPY, PLAYLIST_COUNT, PLAYLIST_CREATE, PLAYLIST_DELETE, PLAYLIST_EDIT,
@@ -12,7 +12,6 @@ use crate::{
 };
 use egui::{Button, Label, RichText, ScrollArea, SelectableLabel, Sense, TextEdit, TextStyle};
 use egui_extras::{Column, TableBuilder};
-use log::warn;
 use readable::HeadTail;
 use readable::{Runtime, Unsigned};
 use shukusai::state::Entry;
@@ -144,15 +143,10 @@ impl crate::data::Gui {
 
                                 // Check `[enter]` and add.
                                 if resp.lost_focus()
-                                    && ui.input(|i| i.key_pressed(egui::Key::Enter))
-                                    && !self.state.playlist_string.is_empty()
-                                {
-                                    if !playlists.contains_key(self.state.playlist_string.as_str())
-                                    {
-                                        let string =
-                                            std::mem::take(&mut self.state.playlist_string);
-                                        playlists.playlist_new(&string);
-                                    }
+                                    && ui.input(|i| i.key_pressed(egui::Key::Enter)) && !self.state.playlist_string.is_empty() && !playlists.contains_key(self.state.playlist_string.as_str()) {
+                                    let string =
+                                        std::mem::take(&mut self.state.playlist_string);
+                                    playlists.playlist_new(&string);
                                 }
                             })
                         });
@@ -171,7 +165,7 @@ impl crate::data::Gui {
                             let label_count = Label::new(
                                 RichText::new(
                                     Unsigned::from(shukusai::state::Playlists::valid_len(
-                                        &playlist,
+                                        playlist,
                                     ))
                                     .as_str(),
                                 )
@@ -209,7 +203,7 @@ impl crate::data::Gui {
                                         .on_hover_text(PLAYLIST_DELETE)
                                         .clicked()
                                     {
-                                        self.playlist_remove = Some(Arc::clone(&playlist_name));
+                                        self.playlist_remove = Some(Arc::clone(playlist_name));
                                     }
 
                                     if playlist_name_is_being_edited {
@@ -248,7 +242,7 @@ impl crate::data::Gui {
                                                 )
                                                 .into();
                                                 self.playlist_from =
-                                                    Some(Arc::clone(&playlist_name));
+                                                    Some(Arc::clone(playlist_name));
                                                 self.playlist_to = Some(arc_str);
                                             }
                                         });
@@ -261,7 +255,7 @@ impl crate::data::Gui {
                                             .clicked()
                                         {
                                             self.state.playlist_edit =
-                                                Some(Arc::clone(&playlist_name));
+                                                Some(Arc::clone(playlist_name));
                                             self.state.playlist_edit_string =
                                                 playlist_name.to_string();
                                         }
@@ -310,7 +304,7 @@ impl crate::data::Gui {
                             None => (),
                             Some(name) => {
                                 // Clone old.
-                                let maybe_playlist = playlists.get(&name).map(|v| v.clone());
+                                let maybe_playlist = playlists.get(&name).cloned();
 
                                 // Create new.
                                 if let Some(vec) = maybe_playlist {
@@ -338,16 +332,13 @@ impl crate::data::Gui {
                         }
 
                         // Swap keys if we renamed them above.
-                        match (&mut self.playlist_from, &mut self.playlist_to) {
-                            (Some(from), Some(to)) => {
-                                if let Some(value) = playlists.remove(&**from) {
-                                    playlists.insert(Arc::clone(to), value);
-                                }
-
-                                self.playlist_from = None;
-                                self.playlist_to = None;
+                        if let (Some(from), Some(to)) = (&mut self.playlist_from, &mut self.playlist_to) {
+                            if let Some(value) = playlists.remove(&**from) {
+                                playlists.insert(Arc::clone(to), value);
                             }
-                            _ => (),
+
+                            self.playlist_from = None;
+                            self.playlist_to = None;
                         }
                     });
             }
@@ -363,7 +354,7 @@ impl crate::data::Gui {
                     return_on_none();
                     return;
                 };
-                let arc_str = std::sync::Arc::clone(&arc_str);
+                let arc_str = std::sync::Arc::clone(arc_str);
 
                 let Some(playlist) = playlists.get(&arc_str) else {
                     return_on_none();
@@ -377,7 +368,7 @@ impl crate::data::Gui {
                 // `Playlist` entry count.
                 let label_count = Label::new(
                     RichText::new(
-                        Unsigned::from(shukusai::state::Playlists::valid_len(&playlist)).as_str(),
+                        Unsigned::from(shukusai::state::Playlists::valid_len(playlist)).as_str(),
                     )
                     .color(MEDIUM_GRAY)
                     .text_style(TextStyle::Name("25".into())),

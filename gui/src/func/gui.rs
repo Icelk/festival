@@ -10,8 +10,7 @@ use benri::{log::*, sync::*};
 use disk::{Bincode2, Json};
 use log::{error, info, warn};
 use shukusai::{
-    audio::Volume,
-    collection::{Collection, Keychain},
+    collection::Collection,
     constants::PLAYLIST_VERSION,
     kernel::FrontendToKernel,
     state::{AUDIO_STATE, PLAYLISTS},
@@ -81,7 +80,7 @@ impl Gui {
     // This should be called at the beginning of every major `Ui` frame.
     pub fn set_visuals(&mut self, ui: &mut egui::Ui) {
         // Accent color.
-        let mut visuals = ui.visuals_mut();
+        let visuals = ui.visuals_mut();
         visuals.selection.bg_fill = self.settings.accent_color;
     }
 

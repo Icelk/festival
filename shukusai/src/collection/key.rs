@@ -1,5 +1,4 @@
 //---------------------------------------------------------------------------------------------------- Use
-use benri::atomic_load;
 use bincode::{Decode, Encode};
 use serde::{Deserialize, Serialize};
 use std::sync::atomic::{AtomicUsize, Ordering};

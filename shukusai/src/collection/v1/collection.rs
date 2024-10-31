@@ -6,15 +6,12 @@ use crate::collection::v1::{
     song::Song,
 };
 use crate::collection::{AlbumKey, ArtistKey, Key, Map, SongKey};
-use crate::constants::{COLLECTION_VERSION, FESTIVAL, FRONTEND_SUB_DIR, HEADER, STATE_SUB_DIR};
-use crate::sort::{AlbumSort, ArtistSort, SongSort};
-use benri::lock;
+use crate::constants::{FESTIVAL, FRONTEND_SUB_DIR, HEADER, STATE_SUB_DIR};
 use bincode::{Decode, Encode};
 use const_format::formatcp;
 use once_cell::sync::Lazy;
-use rand::{prelude::SliceRandom, Rng, SeedableRng};
 use readable::Unsigned;
-use std::sync::{Arc, Mutex};
+use std::sync::Arc;
 
 //---------------------------------------------------------------------------------------------------- Lazy
 // This is an empty, dummy `Collection`.

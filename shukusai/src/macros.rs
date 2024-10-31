@@ -5,4 +5,3 @@ macro_rules! assert_size_of {
 		)*
 	};
 }
-pub(crate) use assert_size_of;

@@ -18,7 +18,7 @@ use std::fs::File;
 use std::sync::atomic::AtomicU32;
 use std::time::Duration;
 use symphonia::core::{
-    audio::{AsAudioBufferRef, AudioBuffer, Signal},
+    audio::Signal,
     codecs::{Decoder, DecoderOptions},
     formats::{FormatOptions, FormatReader},
     io::MediaSourceStream,

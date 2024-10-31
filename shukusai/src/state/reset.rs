@@ -3,7 +3,6 @@ use crate::state::Phase;
 use benri::{lockr, lockw};
 use once_cell::sync::Lazy;
 use readable::Percent;
-use serde::{Deserialize, Serialize};
 use std::sync::{Arc, RwLock, RwLockReadGuard, RwLockWriteGuard, TryLockError};
 
 //---------------------------------------------------------------------------------------------------- Lazy

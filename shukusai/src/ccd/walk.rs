@@ -1,8 +1,6 @@
 //---------------------------------------------------------------------------------------------------- Use
 use crate::ccd::mime::{SUPPORTED_AUDIO_MIME_TYPES, SUPPORTED_IMG_MIME_TYPES};
-use crate::ccd::msg::CcdToKernel;
 use benri::log::{ok_trace, skip_warn};
-use crossbeam::channel::Sender;
 use log::trace;
 use rayon::prelude::*;
 use std::path::{Path, PathBuf};

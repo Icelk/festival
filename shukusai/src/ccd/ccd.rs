@@ -2,10 +2,10 @@
 use crate::ccd::msg::CcdToKernel;
 use crate::{
     collection::{
-        AlbumKey, Albums, Art, ArtistKey, Artists, Collection, Image, Map, SongKey, Songs,
+        AlbumKey, Albums, ArtistKey, Artists, Collection, Image, Map, SongKey, Songs,
     },
     constants::{COLLECTION_VERSION, PLAYLIST_VERSION},
-    state::{Phase, Playlists, PLAYLISTS},
+    state::Phase,
 };
 use benri::{debug_panic, log::*, sync::*, thread::*, time::*};
 use crossbeam::channel::Sender;

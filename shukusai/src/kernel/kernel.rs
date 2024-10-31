@@ -1,9 +1,9 @@
 //---------------------------------------------------------------------------------------------------- Use
 use super::{FrontendToKernel, KernelToFrontend};
 use crate::{
-    audio::{Append, Audio, AudioToKernel, KernelToAudio, Volume},
+    audio::{Audio, AudioToKernel, KernelToAudio, Volume},
     ccd::{Ccd, CcdToKernel},
-    collection::{AlbumKey, ArtistKey, Collection, SongKey, DUMMY_COLLECTION},
+    collection::{Collection, SongKey, DUMMY_COLLECTION},
     constants::{AUDIO_VERSION, COLLECTION_VERSION, PLAYLIST_VERSION},
     logger::INIT_INSTANT,
     search::{KernelToSearch, Search, SearchToKernel},
@@ -19,10 +19,8 @@ use disk::{Bincode2, Json};
 use log::{debug, error, info, trace, warn};
 use once_cell::sync::Lazy;
 use rayon::prelude::*;
-use std::collections::VecDeque;
 use std::path::PathBuf;
 use std::sync::Arc;
-use std::time::Duration;
 
 #[cfg(feature = "gui")]
 use crate::collection::{UNKNOWN_ALBUM, UNKNOWN_ALBUM_ID};

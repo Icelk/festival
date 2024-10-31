@@ -8,14 +8,13 @@ use crate::collection::{
 };
 use crate::constants::{COLLECTION_VERSION, FESTIVAL, FRONTEND_SUB_DIR, HEADER, STATE_SUB_DIR};
 use crate::sort::{AlbumSort, ArtistSort, SongSort};
-use benri::lock;
 use bincode::{Decode, Encode};
 use const_format::formatcp;
 use once_cell::sync::Lazy;
 use rand::{prelude::SliceRandom, Rng, SeedableRng};
 use readable::Unsigned;
 use serde::Serialize;
-use std::sync::{Arc, Mutex};
+use std::sync::Arc;
 
 //---------------------------------------------------------------------------------------------------- Lazy
 // This is an empty, dummy `Collection`.
