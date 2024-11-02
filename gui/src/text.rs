@@ -202,6 +202,7 @@ pub const HELP: &str = r#"*-----------------------------------------------------
 |          CTRL+E | Rotate Artist Sort                  |
 |          CTRL+R | Rotate Song Sort                    |
 |          CTRL+D | Goto Last Tab                       |
+|           Space | Play / pause                        |
 |              Up | Last Tab                            |
 |            Down | Next Tab                            |
 |           Right | Last Sub-Tab                        |

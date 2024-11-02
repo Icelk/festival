@@ -435,6 +435,8 @@ impl Gui {
                     self.debug_screen = false;
                     self.playlist_add_screen = None;
                 // Check for [A-Za-z0-9] (Search)
+                } else if input.consume_key(Modifiers::NONE, Key::Space) {
+                    send!(self.to_kernel, FrontendToKernel::Toggle);
                 } else {
                     for key in ALPHANUMERIC_KEY {
                         if input.consume_key(Modifiers::NONE, key) {
