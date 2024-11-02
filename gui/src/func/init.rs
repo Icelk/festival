@@ -181,6 +181,9 @@ impl crate::data::Gui {
         debug!("Settings{SETTINGS_VERSION}: {settings:#?}");
 
         cc.egui_ctx.set_theme(ThemePreference::Dark);
+        cc.egui_ctx.options_mut(|options| {
+            options.line_scroll_speed = 100.0;
+        });
 
         cc.egui_ctx
             .set_pixels_per_point(settings.pixels_per_point as f32);
