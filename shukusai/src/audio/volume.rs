@@ -71,7 +71,7 @@ impl Volume {
     }
 
     pub(crate) const fn const_default() -> Self {
-        Self::new_25()
+        Self::new_100()
     }
 }
 

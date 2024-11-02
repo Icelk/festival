@@ -6,8 +6,8 @@ use crate::constants::{
 use crate::data::Gui;
 use crate::data::{KeyPress, Tab, ALPHANUMERIC_KEY, EXIT_COUNTDOWN, SHOULD_EXIT};
 use crate::text::{
-    COLLECTION_LOADING, COLLECTION_RESETTING, DRAG_AND_DROP, EMPTY_COLLECTION, MOD,
-    UI_FORWARDS, UI_PAUSE, UI_PLAY, UI_PREVIOUS,
+    COLLECTION_LOADING, COLLECTION_RESETTING, DRAG_AND_DROP, EMPTY_COLLECTION, MOD, UI_FORWARDS,
+    UI_PAUSE, UI_PLAY, UI_PREVIOUS,
 };
 use benri::{debug_panic, flip, log::*, sync::*, time::*};
 use disk::Plain;
@@ -620,74 +620,6 @@ impl Gui {
                         }
                     });
 
-                    // Return if we don't have a `SongKey`.
-                    let key = match self.audio_state.song {
-                        Some(k) => k,
-                        _ => return,
-                    };
-                    let (artist, album, song) = self.collection.walk(key);
-
-                    // Album button.
-                    ui.group(|ui| {
-                        // Album button.
-                        crate::no_rounding!(ui);
-                        crate::album_button!(self, album, song.album, ui, ctx, height, "");
-
-                        ui.vertical(|ui| {
-                            // How many char's before we need
-                            // to cut off the song title?
-                            // (scales based on pixels available).
-                            let head = (unit / 5.0) as usize;
-
-                            let text_style = TextStyle::Name("12.5".into());
-
-                            //-------------------------------------------------- `Song` title.
-                            let song_head = song.title.head_dot(head);
-                            let chopped = &*song.title != song_head;
-                            let song_title = Label::new(
-                                RichText::new(song_head)
-                                    .text_style(text_style.clone())
-                                    .color(BONE),
-                            );
-                            // Show the full title on hover
-                            // if we chopped it with head.
-                            if chopped {
-                                ui.add(song_title).on_hover_text(&*song.title);
-                            } else {
-                                ui.add(song_title);
-                            }
-
-                            //-------------------------------------------------- `Album` name.
-                            let album_head = album.title.head_dot(head);
-                            let chopped = &*album.title != album_head;
-                            let album_name = Label::new(
-                                RichText::new(album_head).text_style(text_style.clone()),
-                            );
-                            if chopped {
-                                ui.add(album_name).on_hover_text(&*album.title);
-                            } else {
-                                ui.add(album_name);
-                            }
-
-                            //-------------------------------------------------- `Artist` name.
-                            let artist_head = artist.name.head_dot(head);
-                            let chopped = &*artist.name != artist_head;
-                            let artist_name =
-                                Label::new(RichText::new(artist_head).text_style(text_style));
-                            if chopped {
-                                if ui
-                                    .add(artist_name.sense(Sense::click()))
-                                    .on_hover_text(&*artist.name)
-                                    .clicked()
-                                {
-                                    crate::artist!(self, album.artist);
-                                }
-                            } else if ui.add(artist_name.sense(Sense::click())).clicked() {
-                                crate::artist!(self, album.artist);
-                            }
-                        });
-                    });
-
                     // Leave space for the runtime at the end.
                     let width = ui.available_width() - self.runtime_width;
 
@@ -710,7 +642,7 @@ impl Gui {
                             0..=self.audio_state.runtime.inner() as u64,
                         )
                         .smallest_positive(1.0)
-                        .show_value(false)
+                        .show_value(false),
                     );
 
                     // Only send signal if the slider was dragged + released.
@@ -783,58 +715,67 @@ impl Gui {
 
                 ui.spacing_mut().slider_width = slider_height;
 
-                ui.horizontal(|ui| {
-                    let unit = width / 10.0;
-                    ui.add_space(unit * 4.0);
-                    {
-                        let v = &mut ui.visuals_mut().widgets;
-                        v.inactive.fg_stroke = SLIDER_CIRCLE_INACTIVE;
-                        v.hovered.fg_stroke = SLIDER_CIRCLE_HOVERED;
-                        v.active.fg_stroke = SLIDER_CIRCLE_ACTIVE;
+                // Return if we don't have a `SongKey`.
+                let key = match self.audio_state.song {
+                    Some(k) => k,
+                    _ => return,
+                };
+                let (artist, album, song) = self.collection.walk(key);
+
+                ui.with_layout(egui::Layout::bottom_up(egui::Align::Center), |ui| {
+                    // Album button.
+                    crate::no_rounding!(ui);
+                    crate::album_button!(self, album, song.album, ui, ctx, width, "");
+                    // How many char's before we need
+                    // to cut off the song title?
+                    // (scales based on pixels available).
+                    let head = (width / 5.0) as usize;
+
+                    let text_style = TextStyle::Name("12.5".into());
+
+                    //-------------------------------------------------- `Song` title.
+                    let song_head = song.title.head_dot(head);
+                    let chopped = &*song.title != song_head;
+                    let song_title = Label::new(
+                        RichText::new(song_head)
+                            .text_style(text_style.clone())
+                            .color(BONE),
+                    );
+                    // Show the full title on hover
+                    // if we chopped it with head.
+                    if chopped {
+                        ui.add(song_title).on_hover_text(&*song.title);
+                    } else {
+                        ui.add(song_title);
                     }
 
-                    // Volume slider.
-                    let resp = ui.add(
-                        Slider::new(&mut self.state.volume, 0..=100)
-                            .smallest_positive(1.0)
-                            .show_value(false)
-                            .vertical()
-                    );
+                    //-------------------------------------------------- `Album` name.
+                    let album_head = album.title.head_dot(head);
+                    let chopped = &*album.title != album_head;
+                    let album_name =
+                        Label::new(RichText::new(album_head).text_style(text_style.clone()));
+                    if chopped {
+                        ui.add(album_name).on_hover_text(&*album.title);
+                    } else {
+                        ui.add(album_name);
+                    }
 
-                    // Send signal if the slider was/is being dragged.
-                    if resp.dragged() {
-                        // HACK:
-                        // THIS IS VERY VERY VERY TERRIBLE, REALLY BAD CODE.
-                        //
-                        // This used to be a `send!([ ... volume ... ])` but
-                        // that actually ended up causing a DoS on `Audio` since
-                        // we would be sending an insane amount of messages.
-                        //
-                        // To combat this specifically, this exact slider, `shukusai`
-                        // now uses a global, mutable `AtomicU8` as the global "Volume"
-                        // which `Audio` will use instead of `AUDIO_STATE`.
-                        //
-                        // Please please please please rewrite `Audio`.
-                        atomic_store!(shukusai::state::VOLUME, self.state.volume);
-                    // If scrolled up/down, send signal.
-                    } else if resp.hovered() {
-                        ctx.input_mut(|input| {
-                            for event in input.events.iter() {
-                                if let egui::Event::MouseWheel { delta: vec2, .. } = event {
-                                    if vec2.y.is_sign_positive() {
-                                        self.add_volume(1);
-                                    } else if vec2.y.is_sign_negative() {
-                                        self.sub_volume(1);
-                                    }
-                                    break;
-                                }
-                            }
-                        });
+                    //-------------------------------------------------- `Artist` name.
+                    let artist_head = artist.name.head_dot(head);
+                    let chopped = &*artist.name != artist_head;
+                    let artist_name = Label::new(RichText::new(artist_head).text_style(text_style));
+                    if chopped {
+                        if ui
+                            .add(artist_name.sense(Sense::click()))
+                            .on_hover_text(&*artist.name)
+                            .clicked()
+                        {
+                            crate::artist!(self, album.artist);
+                        }
+                    } else if ui.add(artist_name.sense(Sense::click())).clicked() {
+                        crate::artist!(self, album.artist);
                     }
                 });
-
-                // Volume %.
-                ui.label(readable::itoa!(self.state.volume));
             });
         });
     }

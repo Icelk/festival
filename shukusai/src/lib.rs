@@ -20,7 +20,6 @@
 	for_loops_over_fallibles,
 	large_assignments,
 	overlapping_range_endpoints,
-	private_in_public,
 	semicolon_in_expressions_from_macros,
 	redundant_semicolons,
 	unconditional_recursion,
@@ -39,6 +38,8 @@
 	single_use_lifetimes,
 //	variant_size_differences,
 )]
+
+#![allow(warnings)]
 
 // There are some `as` casts but they are:
 // - handled with `.try_into()`
