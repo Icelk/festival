@@ -571,8 +571,9 @@ impl Gui {
                     const EXTRA_HEIGHT: f32 = 8.0;
                     ui.spacing_mut().button_padding.y += EXTRA_HEIGHT;
 
+                    let group = Frame::group(ui.style()).stroke(egui::Stroke::NONE);
                     // Media control buttons
-                    ui.group(|ui| {
+                    group.show(ui, |ui| {
                         let height = height + EXTRA_HEIGHT;
 
                         const SIZE: f32 = 33.0;
